@@ -137,7 +137,6 @@ dmypy.json
 **/*.vim
 
 # Data files
-data/
 **/*.csv
 **/*.tsv
 **/*.json
