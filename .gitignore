@@ -142,3 +142,6 @@ dmypy.json
 **/*.json
 **/*.jsonl
 **/*.yaml
+
+# Notebooks
+notebooks/
