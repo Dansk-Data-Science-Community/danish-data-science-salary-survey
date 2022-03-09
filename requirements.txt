@@ -6,3 +6,6 @@ matplotlib==3.5.1
 
 # Utils
 tqdm==4.63.0
+
+# Style
+black==21.12b0
