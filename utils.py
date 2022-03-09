@@ -53,7 +53,3 @@ def load_data() -> pd.DataFrame:
     df['years_experience_float'] = df['years_experience_float'].fillna(0)
 
     return df
-
-
-
-
