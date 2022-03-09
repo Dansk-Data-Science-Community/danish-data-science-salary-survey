@@ -11,7 +11,12 @@ def load_data() -> pd.DataFrame:
             The survey data.
     '''
 
-    df = pd.read_csv("data/Danish-Data-Science-Salary-Survey.csv")
+    # Locate the path to the data, which takes the first CSV file 
+    # in the 'data' directory
+    data_path = next(Path('data').glob('*.csv'))
+    
+    # Load the data
+    df = pd.read_csv(data_path)
 
     # Discard those who did not want to partake and remove the question
     df = df[df["Do you agree to take part in this survey?"] == "I am happy to take part in this survey"]
