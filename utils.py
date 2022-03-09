@@ -1,4 +1,7 @@
+'''Utility functions to be used within the project'''
+
 import pandas as pd
+from pathlib import Path
 
 def load_data() -> pd.DataFrame:
     '''Loads the survey data as a dataframe.
