@@ -41,6 +41,8 @@ def load_data() -> pd.DataFrame:
         "Are you a Danish national/citizen?" : "danish_national"
         })
     
+    # Convert the 'timestamp' column to a datetime format,
+    # rather than simply a datetime string
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     
     # Duplicate years_experience col and convert to numeric. NB! 15+ years will simply be 15
