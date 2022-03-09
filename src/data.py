@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Union
 
 
-def load_data(data_dir: Union[str, Path] = 'data') -> pd.DataFrame:
+def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     """Loads the survey data as a dataframe.
 
     Args:
