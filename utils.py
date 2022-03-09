@@ -46,6 +46,7 @@ def load_data() -> pd.DataFrame:
     # Duplicate years_experience col and convert to numeric. NB! 15+ years will simply be 15
     df["years_experience_float"] = df["years_experience_str"].str.replace(r'\D', '')
     df["years_experience_float"] = pd.to_numeric(df["years_experience_float"])
+    
     # "Less than a year" is converted to nan. Convert nan to 0
     df['years_experience_float'] = df['years_experience_float'].fillna(0)
 
