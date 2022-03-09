@@ -1,6 +1,12 @@
 import pandas as pd
 
-def load_data() -> "pd.DataFrame":
+def load_data() -> pd.DataFrame:
+    '''Loads the survey data as a dataframe.
+    
+    Returns:
+        Pandas Dataframe:
+            The survey data.
+    '''
 
     df = pd.read_csv("data/Danish-Data-Science-Salary-Survey.csv")
 
