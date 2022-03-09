@@ -2,19 +2,26 @@
 
 import pandas as pd
 from pathlib import Path
+from typing import Union
 
 
-def load_data() -> pd.DataFrame:
+def load_data(data_dir: Union[str, Path] = 'data') -> pd.DataFrame:
     """Loads the survey data as a dataframe.
+
+    Args:
+        data_dir (str or Path):
+            The directory containing the data.
 
     Returns:
         Pandas Dataframe:
             The survey data.
     """
+    # Ensure that `data_dir` is a Path object
+    data_dir = Path(data_dir)
 
     # Locate the path to the data, which takes the first CSV file
     # in the 'data' directory
-    data_path = next(Path("data").glob("*.csv"))
+    data_path = next(data_dir.glob("*.csv"))
 
     # Load the data
     df = pd.read_csv(data_path)

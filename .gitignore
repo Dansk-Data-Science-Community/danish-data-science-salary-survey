@@ -142,6 +142,7 @@ dmypy.json
 **/*.json
 **/*.jsonl
 **/*.yaml
+!tests/data/test_survey_results.csv
 
 # Notebooks
 notebooks/

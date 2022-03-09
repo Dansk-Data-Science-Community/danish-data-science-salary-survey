@@ -9,7 +9,7 @@ class TestData:
 
     @pytest.fixture(scope="class")
     def df(self):
-        yield load_data()
+        yield load_data('tests/data')
 
     def test_no_consent_column(self, df):
         """Check that the consent column has been removed"""
