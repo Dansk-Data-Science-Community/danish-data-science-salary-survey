@@ -1,0 +1,16 @@
+# This workflow will run a Black style check
+
+name: Black linting
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jpetrucciani/black-check@21.12b0
