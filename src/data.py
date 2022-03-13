@@ -85,6 +85,14 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     # "Less than a year" is converted to nan. Convert nan to 0
     df["years_experience"] = df.years_experience.fillna(0)
 
+    # Replace gender strings for easier processing
+    gender_map = {
+        'Female (including transgender women)': 'female',
+        'Male (including transgender men)': 'male',
+        'Prefer not to say': 'no answer'
+    }
+    df = df.replace({'gender': gender_map})
+
     # Set up datatypes
     dtypes = dict(
         salary="int",

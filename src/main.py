@@ -4,33 +4,11 @@ import pandas as pd
 import numpy as np
 import time
 from collections import Counter
+from data import load_data
 
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import plotly.express as px
-
-def load_data():
-    df = pd.read_csv('../data/survey_results.csv')
-    df.columns = ['ts', 'consent', 'salary', 'bonus_2021', 'equity', 'job_title', 'tools', 'num_colleagues', \
-        'num_managing', 'job_sector', 'region', 'education', 'degree', 'work_experience', 'gender', 'danish_citizen']
-
-    consent_map = {
-        'I am happy to take part in this survey': True,
-        'I do not want to take part in this survey': False
-    }
-    df = df.replace({'consent': consent_map})
-    df = df[df.consent]
-
-    gender_map = {
-        'Female (including transgender women)': 'female',
-        'Male (including transgender men)': 'male',
-        'Prefer not to say': 'no answer'
-    }
-    df = df.replace({'gender': gender_map})
-
-    df.tools = df.tools.apply(lambda t: t.split(';') if not type(t) == float else [])
-
-    return df
 
 if __name__ == '__main__':
     df = load_data()
