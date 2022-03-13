@@ -87,11 +87,11 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
 
     # Replace gender strings for easier processing
     gender_map = {
-        'Female (including transgender women)': 'female',
-        'Male (including transgender men)': 'male',
-        'Prefer not to say': 'no answer'
+        "Female (including transgender women)": "female",
+        "Male (including transgender men)": "male",
+        "Prefer not to say": "no answer",
     }
-    df = df.replace({'gender': gender_map})
+    df = df.replace({"gender": gender_map})
 
     # Set up datatypes
     dtypes = dict(
