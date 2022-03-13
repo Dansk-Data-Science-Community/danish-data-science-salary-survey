@@ -1,14 +1,8 @@
-from cmath import isnan
 import streamlit as st
 import pandas as pd
-import numpy as np
-import time
-from collections import Counter
 from data import load_data
 
 import plotly.figure_factory as ff
-import plotly.graph_objects as go
-import plotly.express as px
 
 if __name__ == '__main__':
     df = load_data()
