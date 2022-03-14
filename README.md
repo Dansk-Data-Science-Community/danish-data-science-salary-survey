@@ -2,4 +2,4 @@
 This repository contains the source code related to the analysis of the salary
 survey, as well as the development of a dashboard webapp.
 
-To launch the dashboard: `streamlit run src/main.py`
+To launch the dashboard: `streamlit run src/dashboard.py`
