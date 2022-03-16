@@ -11,16 +11,18 @@ if __name__ == "__main__":
     df = load_data()
 
     # Only allow categorical columns
-    columns = df.select_dtypes(include=['category']).columns.values
+    columns = df.select_dtypes(include=["category"]).columns.values
 
-    option = st.selectbox('Comparison variable', columns)
+    option = st.selectbox("Comparison variable", columns)
     render_df = df.copy()
 
     # Remove unnecessary values for clearner plots
-    if option == 'received_equity':
-        render_df = render_df[~render_df.received_equity.isin(['I do not know', 'Prefer not to say'])]
+    if option == "received_equity":
+        render_df = render_df[
+            ~render_df.received_equity.isin(["I do not know", "Prefer not to say"])
+        ]
     # TODO: Implement for other columns
-    # elif 
+    # elif
 
     fig = px.box(render_df, x=option, y="salary")
 
