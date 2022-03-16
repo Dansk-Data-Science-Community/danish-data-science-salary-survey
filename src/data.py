@@ -116,8 +116,8 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     df = df[df.salary > 0]
     df.loc[df["salary"] == 56, "salary"] = 56000
     df.loc[df["salary"] == 65, "salary"] = 65000
-    df.loc[df["salary"] == 700000, "salary"] = 700000 / 12
-    df.loc[df["salary"] == 720000, "salary"] = 720000 / 12
-    df.loc[df["salary"] == 1000000, "salary"] = 1000000 / 12
+    df.loc[df["salary"] == 700000, "salary"] = int(700000 / 12)
+    df.loc[df["salary"] == 720000, "salary"] = int(720000 / 12)
+    df.loc[df["salary"] == 1000000, "salary"] = int(1000000 / 12)
 
     return df
