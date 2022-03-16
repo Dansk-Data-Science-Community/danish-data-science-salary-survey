@@ -1,7 +1,7 @@
+from pydoc import render_doc
 import streamlit as st
 from data import load_data
 from utils import RELEVANT_VALS, INTRO_PARAGRAPH
-from PIL import Image
 
 import plotly.figure_factory as ff
 import plotly.express as px
