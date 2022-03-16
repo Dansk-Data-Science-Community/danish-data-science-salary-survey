@@ -22,7 +22,6 @@ if __name__ == "__main__":
             ~render_df.received_equity.isin(["I do not know", "Prefer not to say"])
         ]
     # TODO: Implement for other columns
-    # elif
 
     fig = px.box(render_df, x=option, y="salary")
 
