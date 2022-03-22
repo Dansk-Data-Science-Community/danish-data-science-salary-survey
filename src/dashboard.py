@@ -57,7 +57,7 @@ if __name__ == "__main__":
             x=option,
             y="salary",
             color=option,
-            color_discrete_sequence=px.colors.qualitative.Light24,
+            color_discrete_sequence=px.colors.sequential.matter,
             category_orders=sort_order,
         )
         fig.update_layout(showlegend=False)
