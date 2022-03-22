@@ -1,4 +1,5 @@
-RELEVANT_VALS = {
+# Columns with an intuitive order - manually set below
+MANUAL_SORT_COLS = {
     "received_equity": ["Yes", "No"],
     "num_employees": [
         "0 (e.g., self-employed)",
@@ -20,6 +21,12 @@ RELEVANT_VALS = {
     "gender": ["male", "female"],
     "danish_national": ["Yes", "No"],
 }
+
+# Columns that don't have an intuitive order to sort by median salary
+MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background"]
+
+# Values to remove for appearance
+FILTER_VALS = ["Other", "Prefer not to say"]
 
 INTRO_PARAGRAPH = """
     <div id="header">
