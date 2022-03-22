@@ -3,6 +3,9 @@
 import pandas as pd
 from pathlib import Path
 from typing import Union
+import streamlit as st
+from b2sdk.v2 import B2Api, DoNothingProgressListener
+import os
 
 
 def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
@@ -16,12 +19,28 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
         Pandas Dataframe:
             The survey data.
     """
+
     # Ensure that `data_dir` is a Path object
     data_dir = Path(data_dir)
 
-    # Locate the path to the data, which takes the first CSV file
-    # in the 'data' directory
-    data_path = next(data_dir.glob("*.csv"))
+    # Check if csv file exists locally
+    csv_files = list(data_dir.glob("*.csv"))
+    if len(csv_files) > 0:
+        data_path = csv_files[0]
+
+    # Fetch csv file from Backblaze
+    else:
+        with st.spinner('Fetching data'):
+            b2_api = B2Api()
+            application_key_id = os.environ.get('APP_KEY_ID')
+            application_key = os.environ.get('APP_KEY')
+            file_id = os.environ.get('FILE_ID')
+            b2_api.authorize_account("production", application_key_id, application_key)
+
+            progress_listener = DoNothingProgressListener()
+            downloaded_file = b2_api.download_file_by_id(file_id, progress_listener)
+            data_path = str(data_dir) + '/survey_results.csv'
+            downloaded_file.save_to(data_path)
 
     # Load the data
     df = pd.read_csv(data_path)
