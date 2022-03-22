@@ -23,11 +23,19 @@ if __name__ == "__main__":
         # Only allow categorical columns
         columns = df.select_dtypes(include=["category"]).columns.values
 
+        # Filter nationality and gender
+        columns = [c for c in columns if c not in ["danish_national", "gender"]]
+
         # Dropdown for selecting comparison variable
         option = st.selectbox("Comparison variable", columns)
 
         # Remove irrelevant values i.e. "Other", "Prefer not to say"
         render_df = df[~df[option].isin(FILTER_VALS)]
+
+        # Remove values with <5 entries
+        grouped_df = render_df.groupby(option).agg({"salary": "count"})
+        allowed_vals = grouped_df[grouped_df.salary > 5].index.tolist()
+        render_df = render_df[render_df[option].isin(allowed_vals)]
 
     # TODO: Display more information on selected category. Maybe also the wording of the question from the survey?
 
