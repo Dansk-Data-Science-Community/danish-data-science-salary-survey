@@ -31,10 +31,10 @@ MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background"]
 # Values to remove for appearance
 FILTER_VALS = ["Other", "Prefer not to say"]
 
-assets_path = str(Path(__file__).parent.parent) + '/assets'
+assets_path = str(Path(__file__).parent.parent) + "/assets"
 encode_img = lambda path: base64.b64encode(Path(path).read_bytes()).decode()
 
-INTRO_HTML = f'''
+INTRO_HTML = f"""
     <div id="header">
         <img src="https://ddsc.io/static/ddsc-logo-base.png" id="logo" />  
         <h2>DDSC Salary Survey</h2>
@@ -58,9 +58,9 @@ INTRO_HTML = f'''
             </a>
         </div>
     </div>
-'''
+"""
 
-INTRO_CSS = '''
+INTRO_CSS = """
     <style>
 
         a {
@@ -103,6 +103,6 @@ INTRO_CSS = '''
         }
 
     </style>
-'''
+"""
 
 INTRO_PARAGRAPH = INTRO_HTML + INTRO_CSS
