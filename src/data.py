@@ -94,6 +94,45 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     }
     df = df.replace({"gender": gender_map})
 
+    # Manually fix incorrect salary values
+    df = df[df.salary > 0]
+    df.loc[df["salary"] == 56, "salary"] = 56000
+    df.loc[df["salary"] == 65, "salary"] = 65000
+    df.loc[df["salary"] == 700000, "salary"] = int(700000 / 12)
+    df.loc[df["salary"] == 720000, "salary"] = int(720000 / 12)
+    df.loc[df["salary"] == 1000000, "salary"] = int(1000000 / 12)
+
+    # Merge sector values
+    df["sector"] = df["sector"].apply(
+        lambda sector: "Pharmaceuticals" if "pharma" in sector.lower() else sector
+    )
+    sector_map = {
+        "University": "Education/Research",
+        "Research": "Education/Research",
+        "Trading company (Preowned Medical Equipment)": "Retail/E-commerce",
+        "Consumer industries": "Retail/E-commerce",
+        "Agency": "Consulting",
+        "Jobportaler": "Tech",
+        "Union": "Law",
+    }
+    df = df.replace({"sector": sector_map})
+
+    # Merge educational_background values
+    educational_background_map = {
+        "Language and NLP": "Data Science",
+        "Bs in Math, Bs and Ms in Anthropology": "Maths / Stats",
+        "It teknolog": "Computer Science",
+        "Physics": "Natural Sciences",
+    }
+    df = df.replace({"educational_background": educational_background_map})
+
+    # Merge highest_education values
+    highest_education_map = {
+        "Doing my Master's": "Undergraduate (e.g., bachelor, professionsbachelor)",
+        "Dr.scient.": "PhD",
+        "DrMedSc": "PhD",
+    }
+
     # Set up datatypes
     dtypes = dict(
         salary="int",
@@ -111,13 +150,5 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
         danish_national="category",
     )
     df = df.astype(dtypes)
-
-    # Manually fix incorrect values
-    df = df[df.salary > 0]
-    df.loc[df["salary"] == 56, "salary"] = 56000
-    df.loc[df["salary"] == 65, "salary"] = 65000
-    df.loc[df["salary"] == 700000, "salary"] = int(700000 / 12)
-    df.loc[df["salary"] == 720000, "salary"] = int(720000 / 12)
-    df.loc[df["salary"] == 1000000, "salary"] = int(1000000 / 12)
 
     return df
