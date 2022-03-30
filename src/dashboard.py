@@ -1,7 +1,13 @@
 from pydoc import render_doc
 import streamlit as st
 from data import load_data
-from utils import MANUAL_SORT_COLS, MEDIAN_SORT_COLS, INTRO_PARAGRAPH, FILTER_VALS
+from utils import (
+    MANUAL_SORT_COLS,
+    MEDIAN_SORT_COLS,
+    INTRO_PARAGRAPH,
+    FILTER_VALS,
+    COL_NAMES,
+)
 
 import plotly.figure_factory as ff
 import plotly.express as px
@@ -20,14 +26,9 @@ if __name__ == "__main__":
         # Data loading & preprocessing
         df = load_data()
 
-        # Only allow categorical columns
-        columns = df.select_dtypes(include=["category"]).columns.values
-
-        # Filter nationality and gender
-        columns = [c for c in columns if c not in ["danish_national", "gender"]]
-
         # Dropdown for selecting comparison variable
-        option = st.selectbox("Comparison variable", columns)
+        selected = st.selectbox("Comparison variable", COL_NAMES.keys())
+        option = COL_NAMES[selected]
 
         # Remove irrelevant values i.e. "Other", "Prefer not to say"
         render_df = df[~df[option].isin(FILTER_VALS)]
@@ -54,6 +55,9 @@ if __name__ == "__main__":
         render_df = render_df[render_df[option].isin(MANUAL_SORT_COLS[option])]
         sort_order = MANUAL_SORT_COLS
 
+    # More readable plot labels
+    labels = {**{"salary": "Salary"}, **{v: k for k, v in COL_NAMES.items()}}
+
     # Allows for adjusting page width
     _, col, _ = st.columns([1, 10, 1])
 
@@ -64,9 +68,11 @@ if __name__ == "__main__":
             render_df,
             x=option,
             y="salary",
+            points=False,
             color=option,
-            color_discrete_sequence=px.colors.sequential.matter,
+            color_discrete_sequence=px.colors.diverging.Tealrose,
             category_orders=sort_order,
+            labels=labels,
         )
         fig.update_layout(showlegend=False)
 
