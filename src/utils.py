@@ -45,7 +45,6 @@ MANUAL_SORT_COLS = {
         "PhD",
     ],
     "gender": ["male", "female"],
-    "danish_national": ["Yes", "No"],
 }
 
 # Sort boolean columns in order True, False
