@@ -8,8 +8,9 @@ plotly==5.1.0
 
 # Utils
 tqdm==4.63.0
-streamlit==1.7.0
+streamlit>=1.7.0
 scipy>=1.7.3
+click==8
 
 # Style
 black
