@@ -64,7 +64,7 @@ encode_img = lambda path: base64.b64encode(Path(path).read_bytes()).decode()
 
 INTRO_HTML = f"""
     <div id="header">
-        <img src="https://ddsc.io/static/ddsc-logo-base.png" id="logo" />  
+        <img src=data:image/png;base64,{encode_img(assets_path + '/ddsc-logo-base.png')} id="logo" />  
         <h2>DDSC Salary Survey</h2>
     </div>
     <div id="description">
