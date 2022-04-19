@@ -1,5 +1,8 @@
+'''Utility variables and functions used in the project.'''
+
 from pathlib import Path
 import base64
+
 
 # Column names used on dashboard for readability
 COL_NAMES = {
@@ -24,6 +27,7 @@ COL_NAMES = {
     "[Tools] AutoML": "uses_automl_tools",
 }
 
+
 # Columns with an intuitive order - manually set below
 MANUAL_SORT_COLS = {
     "received_equity": ["Yes", "No"],
@@ -47,30 +51,35 @@ MANUAL_SORT_COLS = {
     "gender": ["male", "female"],
 }
 
+
 # Sort boolean columns in order True, False
 MANUAL_SORT_COLS = {
     **MANUAL_SORT_COLS,
     **{COL_NAMES[k]: [True, False] for k in COL_NAMES.keys() if "[Tools]" in k},
 }
 
+
 # Columns that don't have an intuitive order to sort by median salary
 MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background"]
+
 
 # Values to remove for appearance
 FILTER_VALS = ["Other", "Prefer not to say"]
 
+
 assets_path = str(Path(__file__).parent.parent) + "/assets"
 encode_img = lambda path: base64.b64encode(Path(path).read_bytes()).decode()
 
+
 INTRO_HTML = f"""
     <div id="header">
-        <img src=data:image/png;base64,{encode_img(assets_path + '/ddsc-logo-base.png')} id="logo" />  
+        <img src=data:image/png;base64,{encode_img(assets_path + '/ddsc-logo-base.png')} id="logo" />
         <h2>DDSC Salary Survey</h2>
     </div>
     <div id="description">
         This dashboard is generated from results gathered by the <a href="https://ddsc.io/">DDSC</a> salary survey, an anonymous questionnaire concerning data science salaries in Denmark.
         Code can be found on <a href="https://github.com/Dansk-Data-Science-Community/danish-data-science-salary-survey">Github</a>!
-    </div> 
+    </div>
 
     <div id="footer">
         <div id="developed-by">Developed by:</div>
@@ -90,6 +99,7 @@ INTRO_HTML = f"""
         </div>
     </div>
 """
+
 
 INTRO_CSS = """
     <style>
@@ -135,5 +145,6 @@ INTRO_CSS = """
 
     </style>
 """
+
 
 INTRO_PARAGRAPH = INTRO_HTML + INTRO_CSS
