@@ -35,17 +35,10 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
             application_key_id = os.environ.get("APP_KEY_ID")
             application_key = os.environ.get("APP_KEY")
             file_id = os.environ.get("FILE_ID")
-            b2_api.authorize_account(
-                "production",
-                application_key_id,
-                application_key
-            )
+            b2_api.authorize_account("production", application_key_id, application_key)
 
             progress_listener = DoNothingProgressListener()
-            downloaded_file = b2_api.download_file_by_id(
-                file_id,
-                progress_listener
-            )
+            downloaded_file = b2_api.download_file_by_id(file_id, progress_listener)
             data_path = str(data_dir) + "/survey_results.csv"
             downloaded_file.save_to(data_path)
 
@@ -121,13 +114,13 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     df = df.replace({"gender": gender_map})
 
     # Remove non-zero salaries
-    df = df.query('salary > 0')
+    df = df.query("salary > 0")
 
     # Assume that non-zero salaries below 100 have been reported in thousands
     low_salary = df.loc[df["salary"] < 100, "salary"]
     df.loc[df["salary"] < 100, "salary"] = low_salary * 1000
 
-    # Assume that salaries higher than 500k are reported in annual income
+    # Assume that salaries higher than 500k are reported in annual income
     high_salary = df.loc[df["salary"] > 500_000, "salary"]
     df.loc[df["salary"] > 500_000, "salary"] = high_salary // 12
 
@@ -137,7 +130,7 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
         lambda sector: "Pharmaceuticals" if "pharma" in sector.lower() else sector
     )
 
-    # Convert custom sectors to their respective categories
+    # Convert custom sectors to their respective categories
     sector_map = {
         "University": "Education/Research",
         "Research": "Education/Research",

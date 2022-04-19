@@ -1,4 +1,4 @@
-'''Utility variables and functions used in the project.'''
+"""Utility variables and functions used in the project."""
 
 from pathlib import Path
 import base64

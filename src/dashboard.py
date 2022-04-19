@@ -1,4 +1,4 @@
-'''Source code for the dashboard'''
+"""Source code for the dashboard"""
 
 import streamlit as st
 import plotly.express as px
@@ -13,11 +13,10 @@ from utils import (
 
 
 def main():
-    '''Set up and display the dashboard'''
+    """Set up and display the dashboard"""
 
     # Set the title of the dashboard
-    st.set_page_config(page_title="DDSC Salary Survey Dashboard",
-                       layout="wide")
+    st.set_page_config(page_title="DDSC Salary Survey Dashboard", layout="wide")
 
     # Allows for adjusting page width
     _, col, _ = st.columns([1, 3, 1])
@@ -39,7 +38,7 @@ def main():
 
         # Remove values with <5 entries
         grouped_df = render_df.groupby(option).agg({"salary": "count"})
-        allowed_vals = grouped_df.query('salary > 5').index.tolist()
+        allowed_vals = grouped_df.query("salary > 5").index.tolist()
         render_df = render_df[render_df[option].isin(allowed_vals)]
 
     # TODO: Display more information on selected category. Maybe also the
