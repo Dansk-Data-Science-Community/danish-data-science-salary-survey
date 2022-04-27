@@ -102,11 +102,12 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     # Note that "15+ years" will be converted to 15 and "Less than a year" will
     # be converted to 0.
     def convert_experience_to_int(experience: str) -> int:
-        integers_in_string = re.sub(r'[^0-9]', '', experience)
-        if integers_in_string == '':
+        integers_in_string = re.sub(r"[^0-9]", "", experience)
+        if integers_in_string == "":
             return 0
         else:
             return int(integers_in_string)
+
     df["years_experience"] = df.years_experience.map(convert_experience_to_int)
 
     # Replace gender strings for easier processing
@@ -122,13 +123,13 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     df = df.query("salary > 0")
 
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
+        warnings.simplefilter("ignore")
 
         # Assume that non-zero salaries below 100 have been reported in
         # thousands, and that salaries higher than 500k are reported in annual
         # income
-        df['salary'] = df.salary.map(lambda x: 1000 * x if x < 100 else x)
-        df['salary'] = df.salary.map(lambda x: x // 12 if x > 500_000 else x)
+        df["salary"] = df.salary.map(lambda x: 1000 * x if x < 100 else x)
+        df["salary"] = df.salary.map(lambda x: x // 12 if x > 500_000 else x)
 
         # Create separate `Pharmaceuticals` sector if the `sector` column
         # contains the word `pharma`

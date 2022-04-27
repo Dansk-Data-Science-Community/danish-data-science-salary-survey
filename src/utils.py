@@ -69,11 +69,13 @@ FILTER_VALS = ["Other", "Prefer not to say"]
 
 # URLs
 WEBSITE_URL = "https://ddsc.io/"
-GITHUB_URL = "https://github.com/Dansk-Data-Science-Community/danish-data-science-salary-survey"
+GITHUB_URL = (
+    "https://github.com/Dansk-Data-Science-Community/danish-data-science-salary-survey"
+)
 
 
 def get_image(filename: str) -> str:
-    '''Helper function to add images to the HTML.
+    """Helper function to add images to the HTML.
 
     Args:
         filename (str):
@@ -82,7 +84,7 @@ def get_image(filename: str) -> str:
     Returns:
         str:
             The bytestring of the b64 encoded image.
-    '''
+    """
     assets_path = Path(__file__).parent.parent / "assets"
     img_path = assets_path / filename
     b64_encoded = base64.b64encode(img_path.read_bytes())
