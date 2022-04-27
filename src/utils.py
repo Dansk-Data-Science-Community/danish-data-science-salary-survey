@@ -67,8 +67,26 @@ MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background"]
 FILTER_VALS = ["Other", "Prefer not to say"]
 
 
-assets_path = str(Path(__file__).parent.parent) + "/assets"
-encode_img = lambda path: base64.b64encode(Path(path).read_bytes()).decode()
+# URLs
+WEBSITE_URL = "https://ddsc.io/"
+GITHUB_URL = "https://github.com/Dansk-Data-Science-Community/danish-data-science-salary-survey"
+
+
+def get_image(filename: str) -> str:
+    '''Helper function to add images to the HTML.
+
+    Args:
+        filename (str):
+            The name of the image file to add.
+
+    Returns:
+        str:
+            The bytestring of the b64 encoded image.
+    '''
+    assets_path = Path(__file__).parent.parent / "assets"
+    img_path = assets_path / filename
+    b64_encoded = base64.b64encode(img_path.read_bytes())
+    return b64_encoded.decode()
 
 
 INTRO_HTML = f"""
