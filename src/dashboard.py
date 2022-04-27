@@ -1,5 +1,7 @@
-from pydoc import render_doc
+"""Source code for the dashboard"""
+
 import streamlit as st
+import plotly.express as px
 from data import load_data
 from utils import (
     MANUAL_SORT_COLS,
@@ -9,10 +11,11 @@ from utils import (
     COL_NAMES,
 )
 
-import plotly.figure_factory as ff
-import plotly.express as px
 
-if __name__ == "__main__":
+def main():
+    """Set up and display the dashboard"""
+
+    # Set the title of the dashboard
     st.set_page_config(page_title="DDSC Salary Survey Dashboard", layout="wide")
 
     # Allows for adjusting page width
@@ -35,10 +38,11 @@ if __name__ == "__main__":
 
         # Remove values with <5 entries
         grouped_df = render_df.groupby(option).agg({"salary": "count"})
-        allowed_vals = grouped_df[grouped_df.salary > 5].index.tolist()
+        allowed_vals = grouped_df.query("salary > 5").index.tolist()
         render_df = render_df[render_df[option].isin(allowed_vals)]
 
-    # TODO: Display more information on selected category. Maybe also the wording of the question from the survey?
+    # TODO: Display more information on selected category. Maybe also the
+    # wording of the question from the survey?
 
     # Sort values based on median salary
     sort_order = None
@@ -63,7 +67,7 @@ if __name__ == "__main__":
 
     with col:
 
-        # Plot
+        # Set up the figure for the plot
         fig = px.box(
             render_df,
             x=option,
@@ -76,4 +80,9 @@ if __name__ == "__main__":
         )
         fig.update_layout(showlegend=False)
 
+        # Display the plot
         st.plotly_chart(fig, use_container_width=True)
+
+
+if __name__ == "__main__":
+    main()

@@ -113,18 +113,24 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     }
     df = df.replace({"gender": gender_map})
 
-    # Manually fix incorrect salary values
-    df = df[df.salary > 0]
-    df.loc[df["salary"] == 56, "salary"] = 56000
-    df.loc[df["salary"] == 65, "salary"] = 65000
-    df.loc[df["salary"] == 700000, "salary"] = int(700000 / 12)
-    df.loc[df["salary"] == 720000, "salary"] = int(720000 / 12)
-    df.loc[df["salary"] == 1000000, "salary"] = int(1000000 / 12)
+    # Remove non-zero salaries
+    df = df.query("salary > 0")
 
-    # Merge sector values
+    # Assume that non-zero salaries below 100 have been reported in thousands
+    low_salary = df.loc[df["salary"] < 100, "salary"]
+    df.loc[df["salary"] < 100, "salary"] = low_salary * 1000
+
+    # Assume that salaries higher than 500k are reported in annual income
+    high_salary = df.loc[df["salary"] > 500_000, "salary"]
+    df.loc[df["salary"] > 500_000, "salary"] = high_salary // 12
+
+    # Create separate `Pharmaceuticals` sector if the `sector` column contains
+    # the word `pharma`
     df["sector"] = df["sector"].apply(
         lambda sector: "Pharmaceuticals" if "pharma" in sector.lower() else sector
     )
+
+    # Convert custom sectors to their respective categories
     sector_map = {
         "University": "Education/Research",
         "Research": "Education/Research",
@@ -136,7 +142,7 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     }
     df = df.replace({"sector": sector_map})
 
-    # Merge educational_background values
+    # Convert custom educational backgrounds to their respective categories
     educational_background_map = {
         "Language and NLP": "Data Science",
         "Bs in Math, Bs and Ms in Anthropology": "Maths / Stats",
@@ -145,12 +151,13 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     }
     df = df.replace({"educational_background": educational_background_map})
 
-    # Merge highest_education values
+    # Convert custom highest education levels to their respective categories
     highest_education_map = {
         "Doing my Master's": "Undergraduate (e.g., bachelor, professionsbachelor)",
         "Dr.scient.": "PhD",
         "DrMedSc": "PhD",
     }
+    df = df.replace({"highest_education": highest_education_map})
 
     # Set up datatypes
     dtypes = dict(
