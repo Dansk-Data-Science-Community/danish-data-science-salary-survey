@@ -6,6 +6,8 @@ from typing import Union
 import streamlit as st
 from b2sdk.v2 import B2Api, DoNothingProgressListener
 import os
+import re
+import warnings
 
 
 def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
@@ -96,13 +98,17 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     # datetime string
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
-    # Duplicate years_experience col and convert to numeric. NB! 15+ years will
-    # simply be 15
-    df["years_experience"] = df.years_experience.str.replace(r"\D", "", regex=True)
-    df["years_experience"] = pd.to_numeric(df.years_experience)
+    # Duplicate years_experience col and convert to numeric.
+    # Note that "15+ years" will be converted to 15 and "Less than a year" will
+    # be converted to 0.
+    def convert_experience_to_int(experience: str) -> int:
+        integers_in_string = re.sub(r"[^0-9]", "", experience)
+        if integers_in_string == "":
+            return 0
+        else:
+            return int(integers_in_string)
 
-    # "Less than a year" is converted to nan. Convert nan to 0
-    df["years_experience"] = df.years_experience.fillna(0)
+    df["years_experience"] = df.years_experience.map(convert_experience_to_int)
 
     # Replace gender strings for easier processing
     gender_map = {
@@ -116,19 +122,20 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     # Remove non-zero salaries
     df = df.query("salary > 0")
 
-    # Assume that non-zero salaries below 100 have been reported in thousands
-    low_salary = df.loc[df["salary"] < 100, "salary"]
-    df.loc[df["salary"] < 100, "salary"] = low_salary * 1000
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
 
-    # Assume that salaries higher than 500k are reported in annual income
-    high_salary = df.loc[df["salary"] > 500_000, "salary"]
-    df.loc[df["salary"] > 500_000, "salary"] = high_salary // 12
+        # Assume that non-zero salaries below 100 have been reported in
+        # thousands, and that salaries higher than 500k are reported in annual
+        # income
+        df["salary"] = df.salary.map(lambda x: 1000 * x if x < 100 else x)
+        df["salary"] = df.salary.map(lambda x: x // 12 if x > 500_000 else x)
 
-    # Create separate `Pharmaceuticals` sector if the `sector` column contains
-    # the word `pharma`
-    df["sector"] = df["sector"].apply(
-        lambda sector: "Pharmaceuticals" if "pharma" in sector.lower() else sector
-    )
+        # Create separate `Pharmaceuticals` sector if the `sector` column
+        # contains the word `pharma`
+        df["sector"] = df.sector.map(
+            lambda x: "Pharmaceuticals" if "pharma" in x.lower() else x
+        )
 
     # Convert custom sectors to their respective categories
     sector_map = {
