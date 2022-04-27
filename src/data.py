@@ -96,13 +96,16 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     # datetime string
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
-    # Duplicate years_experience col and convert to numeric. NB! 15+ years will
-    # simply be 15
-    df["years_experience"] = df.years_experience.str.replace(r"\D", "", regex=True)
-    df["years_experience"] = pd.to_numeric(df.years_experience)
-
-    # "Less than a year" is converted to nan. Convert nan to 0
-    df["years_experience"] = df.years_experience.fillna(0)
+    # Duplicate years_experience col and convert to numeric.
+    # Note that "15+ years" will be converted to 15 and "Less than a year" will
+    # be converted to 0.
+    def convert_experience_to_int(experience: str) -> int:
+        integers_in_string = re.sub(r'[^0-9]', '', experience)
+        if integers_in_string == '':
+            return 0
+        else:
+            return int(integers_in_string)
+    df["years_experience"] = df.years_experience.map(convert_experience_to_int)
 
     # Replace gender strings for easier processing
     gender_map = {
