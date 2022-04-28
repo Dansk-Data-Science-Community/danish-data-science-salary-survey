@@ -2,7 +2,9 @@
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from diffprivlib.models import LinearRegression
+from sklearn.linear_model import LinearRegression
+from doubt import Boot
+import numpy as np
 from data import load_data
 
 
@@ -13,7 +15,7 @@ def main():
     data = load_data()
 
     # Create model
-    model = LinearRegression()
+    model = Boot(LinearRegression())
 
     # Drop unused variables
     columns = ["timestamp", "gender", "danish_national", "bonus"]
@@ -24,25 +26,36 @@ def main():
         if dtype == "category":
             data[feat] = data[feat].cat.codes
 
-    # Set up the feature matrix
+    # Set up the feature matrix and target vector
     X = data.drop(columns="salary")
-
-    # Set up the target vector
-    y = StandardScaler().fit_transform(data.salary)
+    y = data["salary"]
 
     # Split up the data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+
+    # Fit the scaler and scale the data
+    # y_train_expanded = np.expand_dims(y_train, axis=1)
+    # scaler = StandardScaler().fit(y_train_expanded)
+    # y_train_scaled = scaler.transform(y_train_expanded)
 
     # Fit the model
     model.fit(X_train, y_train)
 
     # Print the model score
-    score = model.score(X_test, y_test)
-    print("Model score:", score)
+    preds, intervals = model.predict(X_test, uncertainty=0.05)
+    # preds = scaler.inverse_transform(np.expand_dims(preds_scaled, axis=1))[0]
+    mse_score = np.abs(preds - y_test).mean()
+    containment_score = np.mean(
+        (y_test > intervals[:, 0]) & (y_test < intervals[:, 1])
+    )
+    print(f"Model MAE score: {int(mse_score):,}")
+    print(f"Model containment score: {100 * containment_score:.2f}%")
 
     sample = X[:1]
-    print("Sample:", sample)
-    print("Prediction:", model.predict(sample))
+    prediction, intervals = model.predict(sample, uncertainty=0.05)
+    #prediction = scaler.inverse_transform(np.expand_dims(prediction_scaled, axis=1))
+    print(f"Sample: {sample}")
+    print(f"Prediction: ({int(intervals[0][0]):,}, {int(intervals[0][1]):,}) - {int(prediction[0]):,}")
 
     breakpoint()
 
