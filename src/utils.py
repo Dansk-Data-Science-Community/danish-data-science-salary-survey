@@ -103,7 +103,7 @@ INTRO_HTML = f"""
   <a href="{WEBSITE_URL}">Danish Data Science Community</a>.
 
   The dashboard has been made with the privacy of the respondents in mind.
-  This means that only share aggregated data (min, max, and the
+  This means that only share aggregated data (the
   <a href="https://en.wikipedia.org/wiki/Quartile">three quartiles</a>) is
   shared, and variables containing data from less than five people have been
   excluded.
@@ -115,9 +115,9 @@ INTRO_HTML = f"""
 
   Currently, you can see how the salaries are distributed based on a
   <i>comparison variable</i> that you can set below. Note that salaries reported are
-  including pension, and excluding bonuses. 
-  
-  Do data analysts earn more than data engineers? Do you earn more if 
+  including pension, and excluding bonuses.
+
+  Do data analysts earn more than data engineers? Do you earn more if
   you use SQL in your daily work? Happy exploring!
 </p>
 
