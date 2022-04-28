@@ -1,7 +1,9 @@
 """Source code for the dashboard"""
 
 import streamlit as st
-import plotly.express as px
+#import plotly.express as px
+import seaborn as sns
+import matplotlib.pyplot as plt
 from data import load_data
 from utils import (
     MANUAL_SORT_COLS,
@@ -63,25 +65,63 @@ def main():
     labels = {**{"salary": "Salary"}, **{v: k for k, v in COL_NAMES.items()}}
 
     # Allows for adjusting page width
-    _, col, _ = st.columns([1, 10, 1])
+    _, col, _ = st.columns([1, 5, 1])
 
     with col:
 
         # Set up the figure for the plot
-        fig = px.box(
-            render_df,
-            x=option,
-            y="salary",
-            points=False,
-            color=option,
-            color_discrete_sequence=px.colors.diverging.Tealrose,
-            category_orders=sort_order,
-            labels=labels,
-        )
-        fig.update_layout(showlegend=False)
+        # fig = px.box(
+        #     render_df,
+        #     x=option,
+        #     y='salary',
+        #     points=False,
+        #     color=option,
+        #     color_discrete_sequence=px.colors.diverging.Tealrose,
+        #     category_orders=sort_order,
+        #     labels=labels,
+        # )
+        # fig.update_layout(showlegend=False)
 
         # Display the plot
-        st.plotly_chart(fig, use_container_width=True)
+        # st.plotly_chart(fig, use_container_width=True)
+
+        plt.style.use('seaborn-whitegrid')
+
+        # Remove unused categorical values
+        for col, dtype in render_df.dtypes.items():
+            if dtype == 'category':
+                render_df[col] = render_df[col].cat.remove_unused_categories()
+
+        # Set up the figure for the plot
+        fig = plt.figure(figsize=(13, 6))
+
+        # Set up sort order for seaborn
+        if sort_order is not None:
+            print(sort_order)
+            sort_order = [
+                col_name for col_name in sort_order[option]
+                if col_name in allowed_vals
+            ]
+
+        # Set up the seaborn box plot
+        sns.boxplot(
+            data=render_df,
+            x=option,
+            y='salary',
+            showfliers=False,
+            order=sort_order,
+            whis=0.0
+        )
+
+        # Rotate the x-axis labels
+        plt.xticks(rotation=45, ha='right')
+
+        # Set the label for the x-axis and y-axis
+        plt.xlabel(labels[option])
+        plt.ylabel("Salary")
+
+        # Display the plot
+        st.pyplot(fig)
 
 
 if __name__ == "__main__":
