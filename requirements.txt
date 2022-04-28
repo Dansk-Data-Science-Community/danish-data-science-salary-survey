@@ -5,6 +5,7 @@ b2sdk==1.14.1
 # Plotting
 matplotlib==3.5.1
 plotly==5.1.0
+seaborn==0.11.2
 
 # Utils
 tqdm==4.63.0
