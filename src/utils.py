@@ -114,9 +114,11 @@ INTRO_HTML = f"""
   us! All source code can be found in our <a href="{GITHUB_URL}">Github repo</a>.
 
   Currently, you can see how the salaries are distributed based on a
-  <i>comparison variable</i> that you can set below. Do data analysts earn more
-  than data engineers? Do you earn more if you use SQL in your daily work?
-  Happy exploring!
+  <i>comparison variable</i> that you can set below. Note that salaries reported are
+  including pension, and excluding bonuses. 
+  
+  Do data analysts earn more than data engineers? Do you earn more if 
+  you use SQL in your daily work? Happy exploring!
 </p>
 
 <div id="footer">
