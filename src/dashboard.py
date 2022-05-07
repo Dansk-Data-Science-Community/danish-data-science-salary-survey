@@ -1,7 +1,7 @@
 """Source code for the dashboard"""
 
 import streamlit as st
-#import plotly.express as px
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from data import load_data
@@ -85,36 +85,43 @@ def main():
         # Display the plot
         # st.plotly_chart(fig, use_container_width=True)
 
-        plt.style.use('seaborn-whitegrid')
+        plt.style.use("seaborn-whitegrid")
 
         # Remove unused categorical values
         for col, dtype in render_df.dtypes.items():
-            if dtype == 'category':
+            if dtype == "category":
                 render_df[col] = render_df[col].cat.remove_unused_categories()
 
         # Set up the figure for the plot
         fig = plt.figure(figsize=(13, 6))
 
-        # Set up sort order for seaborn
+        # Set up sort order for seaborn
         if sort_order is not None:
-            print(sort_order)
             sort_order = [
-                col_name for col_name in sort_order[option]
-                if col_name in allowed_vals
+                col_name for col_name in sort_order[option] if col_name in allowed_vals
             ]
+        else:
+            sort_order = allowed_vals
 
         # Set up the seaborn box plot
-        sns.boxplot(
+        ax = sns.boxplot(
             data=render_df,
             x=option,
-            y='salary',
+            y="salary",
             showfliers=False,
             order=sort_order,
-            whis=0.0
+            whis=0.0,
         )
 
+        # Add labels to the plot
+        stats_df = render_df.groupby(option).salary.agg(median=np.median, n=len)
+        for idx, xpos in enumerate(sort_order):
+            label = f'n = {stats_df["n"][xpos]}'
+            ypos = stats_df["median"][xpos] + 1000
+            ax.text(idx, ypos, label, horizontalalignment="center", size="small")
+
         # Rotate the x-axis labels
-        plt.xticks(rotation=45, ha='right')
+        plt.xticks(rotation=45, ha="right")
 
         # Set the label for the x-axis and y-axis
         plt.xlabel(labels[option])
