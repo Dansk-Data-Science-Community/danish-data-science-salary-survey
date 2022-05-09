@@ -118,7 +118,7 @@ def main():
         for idx, xpos in enumerate(sort_order):
             label = f'n = {stats_df["n"][xpos]}'
             ypos = stats_df["median"][xpos] + 1000
-            ax.text(idx, ypos, label, horizontalalignment="center", size="small")
+            ax.text(idx, ypos, label, horizontalalignment="center", size="large")
 
         # Rotate the x-axis labels
         plt.xticks(rotation=45, ha="right")
