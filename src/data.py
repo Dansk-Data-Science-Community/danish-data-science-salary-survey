@@ -97,7 +97,7 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     tools_cols = [col for col in df if col.startswith("uses_")]
     df_tools = pd.concat([df.pop(x) for x in tools_cols], axis=1)
     df["tool_usage"] = df_tools.apply(
-        lambda row: [col for col, bool_ in row.to_dict().items() if bool_],
+        lambda row: [tools[col].replace("(", "\n(") for col, bool_ in row.to_dict().items() if bool_],
         axis="columns",
         result_type="reduce",
     )

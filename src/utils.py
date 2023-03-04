@@ -47,15 +47,8 @@ MANUAL_SORT_COLS = {
 }
 
 
-# Sort boolean columns in order True, False
-MANUAL_SORT_COLS = {
-    **MANUAL_SORT_COLS,
-    **{COL_NAMES[k]: [True, False] for k in COL_NAMES.keys() if "[Tools]" in k},
-}
-
-
 # Columns that don't have an intuitive order to sort by median salary
-MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background"]
+MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background", "tool_usage"]
 
 
 # Values to remove for appearance
