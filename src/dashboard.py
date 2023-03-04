@@ -11,6 +11,7 @@ from utils import (
     INTRO_PARAGRAPH,
     FILTER_VALS,
     COL_NAMES,
+    MULTI_CATEGORICAL,
 )
 
 
@@ -34,6 +35,9 @@ def main():
         # Dropdown for selecting comparison variable
         selected = st.selectbox("Comparison variable", COL_NAMES.keys())
         option = COL_NAMES[selected]
+
+        if option in MULTI_CATEGORICAL:
+            df = df.explode(option)
 
         # Remove irrelevant values i.e. "Other", "Prefer not to say"
         render_df = df[~df[option].isin(FILTER_VALS)]
@@ -62,7 +66,12 @@ def main():
         sort_order = MANUAL_SORT_COLS
 
     # More readable plot labels
-    labels = {**{"salary": "Salary"}, **{v: k for k, v in COL_NAMES.items()}}
+    labels = {"salary": "Salary", **{v: k for k, v in COL_NAMES.items()}}
+
+    # Remove unused categorical values
+    for col, dtype in render_df.dtypes.items():
+        if dtype == "category":
+            render_df[col] = render_df[col].cat.remove_unused_categories()
 
     # Allows for adjusting page width
     _, col, _ = st.columns([1, 5, 1])
@@ -86,11 +95,6 @@ def main():
         # st.plotly_chart(fig, use_container_width=True)
 
         plt.style.use("seaborn-whitegrid")
-
-        # Remove unused categorical values
-        for col, dtype in render_df.dtypes.items():
-            if dtype == "category":
-                render_df[col] = render_df[col].cat.remove_unused_categories()
 
         # Set up the figure for the plot
         fig = plt.figure(figsize=(13, 6))

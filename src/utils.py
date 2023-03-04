@@ -15,17 +15,12 @@ COL_NAMES = {
     "Educational background": "educational_background",
     "Highest education": "highest_education",
     "Years experience": "years_experience",
-    "Uses high-level languages": "uses_high_level_language",
-    "Uses mid-level languages": "uses_mid_level_language",
-    "Uses query languages": "uses_query_languages",
-    "Uses visualisation tools": "uses_visualisation_tools",
-    "Uses deployment tools": "uses_deployment_tools",
-    "Uses version control tools": "uses_version_control",
-    "Uses spreadsheets": "uses_spreadsheets",
-    "Uses distributed computing tools": "uses_distributed_computing_tools",
-    "Uses monitoring tools": "uses_monitoring_tools",
-    "Uses AutoML tools": "uses_automl_tools",
+    "Tool usage": "tool_usage",
 }
+
+
+# Columns representing multiple categories
+MULTI_CATEGORICAL = ["tool_usage"]
 
 
 # Columns with an intuitive order - manually set below

@@ -93,6 +93,14 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     for name, desc in tools.items():
         df[name] = df.tools.str.split(";").map(lambda lst: desc in lst)
     df.drop(columns="tools", inplace=True)
+    # Now combine boolean columns back into category lists
+    tools_cols = [col for col in df if col.startswith("uses_")]
+    df_tools = pd.concat([df.pop(x) for x in tools_cols], axis=1)
+    df["tool_usage"] = df_tools.apply(
+        lambda row: [col for col, bool_ in row.to_dict().items() if bool_],
+        axis="columns",
+        result_type="reduce",
+    )
 
     # Convert the 'timestamp' column to a datetime format, rather than simply a
     # datetime string
