@@ -41,6 +41,10 @@ def main():
         if option in MULTI_CATEGORICAL:
             df = df.explode(option)
 
+        # Add a newline in all the `tool_usage` strings, to make it look prettier on the plot
+        if option == "tool_usage":
+            df["tool_usage"] = df["tool_usage"].str.replace("(e.g.", "\n(e.g.", regex=False)
+
         # Remove irrelevant values i.e. "Other", "Prefer not to say"
         render_df = df[~df[option].isin(FILTER_VALS)]
 
