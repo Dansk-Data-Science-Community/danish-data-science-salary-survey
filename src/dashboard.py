@@ -36,6 +36,9 @@ def main():
         selected = st.selectbox("Comparison variable", COL_NAMES.keys())
         option = COL_NAMES[selected]
 
+        # The features in `MULTI_CATEGORICAL` are lists of values, so we explode the feature to split
+        # a row with values `[a, b]` into two rows with values `a` and `b`. This allows us to compute the counts
+        # properly for the plot
         if option in MULTI_CATEGORICAL:
             df = df.explode(option)
 
