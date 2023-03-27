@@ -55,7 +55,7 @@ class TestData:
             years_experience="int",
             gender="category",
             danish_national="category",
-            tool_ugit sage="object",
+            tool_usage="object",
         )
         for col_name, dtype in df.dtypes.iteritems():
             assert col_types[col_name] == dtype
