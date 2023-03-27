@@ -3,11 +3,20 @@
 import pandas as pd
 from pathlib import Path
 from typing import Union
-import streamlit as st
 from b2sdk.v2 import B2Api, DoNothingProgressListener
 import os
 import re
 import warnings
+
+
+def convert_experience_to_int(experience: str) -> int:
+    # Note that "15+ years" will be converted to 15 and "Less than a year" will
+    # be converted to 0.
+    integers_in_string = re.sub(r"[^0-9]", "", experience)
+    if integers_in_string == "":
+        return 0
+    else:
+        return int(integers_in_string)
 
 
 def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
@@ -32,17 +41,16 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
 
     # Fetch csv file from Backblaze
     else:
-        with st.spinner("Fetching data"):
-            b2_api = B2Api()
-            application_key_id = os.environ.get("APP_KEY_ID")
-            application_key = os.environ.get("APP_KEY")
-            file_id = os.environ.get("FILE_ID")
-            b2_api.authorize_account("production", application_key_id, application_key)
+        b2_api = B2Api()
+        application_key_id = os.environ.get("APP_KEY_ID")
+        application_key = os.environ.get("APP_KEY")
+        file_id = os.environ.get("FILE_ID")
+        b2_api.authorize_account("production", application_key_id, application_key)
 
-            progress_listener = DoNothingProgressListener()
-            downloaded_file = b2_api.download_file_by_id(file_id, progress_listener)
-            data_path = str(data_dir) + "/survey_results.csv"
-            downloaded_file.save_to(data_path)
+        progress_listener = DoNothingProgressListener()
+        downloaded_file = b2_api.download_file_by_id(file_id, progress_listener)
+        data_path = str(data_dir) + "/survey_results.csv"
+        downloaded_file.save_to(data_path)
 
     # Load the data
     df = pd.read_csv(data_path)
@@ -99,15 +107,6 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     # Duplicate years_experience col and convert to numeric.
-    # Note that "15+ years" will be converted to 15 and "Less than a year" will
-    # be converted to 0.
-    def convert_experience_to_int(experience: str) -> int:
-        integers_in_string = re.sub(r"[^0-9]", "", experience)
-        if integers_in_string == "":
-            return 0
-        else:
-            return int(integers_in_string)
-
     df["years_experience"] = df.years_experience.map(convert_experience_to_int)
 
     # Replace gender strings for easier processing

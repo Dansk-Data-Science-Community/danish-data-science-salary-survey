@@ -6,10 +6,10 @@ import base64
 
 # Column names used on dashboard for readability
 COL_NAMES = {
-    "Received equity": "received_equity",
-    "Job title": "job_title",
+    "Job title": "job_title",  # Visually and conceptually this one works well as the first one
     "Number of employees": "num_employees",
     "Number of subordinates": "num_subordinates",
+    "Received equity": "received_equity",
     "Job sector": "sector",
     "Region": "region",
     "Educational background": "educational_background",
