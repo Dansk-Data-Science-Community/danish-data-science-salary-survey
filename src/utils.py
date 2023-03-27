@@ -48,7 +48,13 @@ MANUAL_SORT_COLS = {
 
 
 # Columns that don't have an intuitive order to sort by median salary
-MEDIAN_SORT_COLS = ["job_title", "sector", "region", "educational_background", "tool_usage"]
+MEDIAN_SORT_COLS = [
+    "job_title",
+    "sector",
+    "region",
+    "educational_background",
+    "tool_usage",
+]
 
 
 # Values to remove for appearance

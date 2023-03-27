@@ -76,7 +76,7 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
 
     # Add a newline in all the `tools` strings, to make it look prettier on the plot
     df["tools"] = df["tools"].str.replace("(e.g.", "\n(e.g.", regex=False)
-    
+
     # Create a `tool_usage` feature, being lists of tools.
     df["tool_usage"] = df["tools"].str.split(";")
 

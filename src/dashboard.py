@@ -25,7 +25,6 @@ def main():
     _, col, _ = st.columns([1, 3, 1])
 
     with col:
-
         # Load intro HTML
         st.markdown(INTRO_PARAGRAPH, unsafe_allow_html=True)
 
@@ -80,7 +79,6 @@ def main():
     _, col, _ = st.columns([1, 5, 1])
 
     with col:
-
         # Set up the figure for the plot
         # fig = px.box(
         #     render_df,
