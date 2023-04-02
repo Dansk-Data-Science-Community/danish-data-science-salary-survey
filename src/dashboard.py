@@ -11,6 +11,7 @@ from utils import (
     INTRO_PARAGRAPH,
     FILTER_VALS,
     COL_NAMES,
+    MULTI_CATEGORICAL,
 )
 
 
@@ -24,7 +25,6 @@ def main():
     _, col, _ = st.columns([1, 3, 1])
 
     with col:
-
         # Load intro HTML
         st.markdown(INTRO_PARAGRAPH, unsafe_allow_html=True)
 
@@ -34,6 +34,18 @@ def main():
         # Dropdown for selecting comparison variable
         selected = st.selectbox("Comparison variable", COL_NAMES.keys())
         option = COL_NAMES[selected]
+
+        # The features in `MULTI_CATEGORICAL` are lists of values, so we explode the feature to split
+        # a row with values `[a, b]` into two rows with values `a` and `b`. This allows us to compute the counts
+        # properly for the plot
+        if option in MULTI_CATEGORICAL:
+            df = df.explode(option)
+
+        # Add a newline in all the `tool_usage` strings, to make it look prettier on the plot
+        if option == "tool_usage":
+            df["tool_usage"] = df["tool_usage"].str.replace(
+                "(e.g.", "\n(e.g.", regex=False
+            )
 
         # Remove irrelevant values i.e. "Other", "Prefer not to say"
         render_df = df[~df[option].isin(FILTER_VALS)]
@@ -62,13 +74,17 @@ def main():
         sort_order = MANUAL_SORT_COLS
 
     # More readable plot labels
-    labels = {**{"salary": "Salary"}, **{v: k for k, v in COL_NAMES.items()}}
+    labels = {"salary": "Salary", **{v: k for k, v in COL_NAMES.items()}}
+
+    # Remove unused categorical values
+    for col, dtype in render_df.dtypes.items():
+        if dtype == "category":
+            render_df[col] = render_df[col].cat.remove_unused_categories()
 
     # Allows for adjusting page width
     _, col, _ = st.columns([1, 5, 1])
 
     with col:
-
         # Set up the figure for the plot
         # fig = px.box(
         #     render_df,
@@ -86,11 +102,6 @@ def main():
         # st.plotly_chart(fig, use_container_width=True)
 
         plt.style.use("seaborn-whitegrid")
-
-        # Remove unused categorical values
-        for col, dtype in render_df.dtypes.items():
-            if dtype == "category":
-                render_df[col] = render_df[col].cat.remove_unused_categories()
 
         # Set up the figure for the plot
         fig = plt.figure(figsize=(13, 6))

@@ -33,17 +33,7 @@ class TestData:
             "years_experience",
             "gender",
             "danish_national",
-            "uses_high_level_language",
-            "uses_mid_level_language",
-            "uses_visualisation_tools",
-            "uses_deployment_tools",
-            "uses_version_control",
-            "uses_spreadsheets",
-            "uses_query_languages",
-            "uses_distributed_computing_tools",
-            "uses_monitoring_tools",
-            "uses_automl_tools",
-            "uses_rpa_tools",
+            "tool_usage",
         ]
         for col in col_names:
             assert col in df.columns
@@ -65,17 +55,7 @@ class TestData:
             years_experience="int",
             gender="category",
             danish_national="category",
-            uses_high_level_language="bool",
-            uses_mid_level_language="bool",
-            uses_visualisation_tools="bool",
-            uses_deployment_tools="bool",
-            uses_version_control="bool",
-            uses_spreadsheets="bool",
-            uses_query_languages="bool",
-            uses_distributed_computing_tools="bool",
-            uses_monitoring_tools="bool",
-            uses_automl_tools="bool",
-            uses_rpa_tools="bool",
+            tool_usage="object",
         )
         for col_name, dtype in df.dtypes.iteritems():
             assert col_types[col_name] == dtype

@@ -74,24 +74,8 @@ def load_data(data_dir: Union[str, Path] = "data") -> pd.DataFrame:
         }
     )
 
-    # Split the `tools` column into a separate Boolean column for each tool.
-    # Note that this effectively removes the 'custom' tool options that people
-    # have inserted, as none of those got more than two answers anyway.
-    tools = dict(
-        uses_high_level_language="High-level programming languages (e.g., Python, R, MATLAB, SAS, Julia, JavaScript)",
-        uses_mid_level_language="Mid-level programming languages (e.g., C, C++, C#, Java, Go)",
-        uses_visualisation_tools="Advanced visualisation tools (e.g., PowerBI, D3.js, Tableau, Qlik)",
-        uses_deployment_tools="Deployment tools (e.g., Docker, AWS SageMaker, Tensorflow Serving, MLflow)",
-        uses_version_control="Version control systems (e.g., GitHub, GitLab, BitBucket, Beanstalk)",
-        uses_spreadsheets="Spreadsheets (e.g., Excel, Google Sheets)",
-        uses_query_languages="Query languages (e.g., SQL, BigQuery)",
-        uses_distributed_computing_tools="Distributed computing tools (e.g., Kubernetes, Apache Hadoop, Apache Spark, Ray)",
-        uses_monitoring_tools="Monitoring tools (e.g., Arize AI, WhyLabs, Grafana, Evidently, Fiddler)",
-        uses_automl_tools="AutoML / Low-code / No-code tools (e.g., PyCaret, TPOT, Google AutoML, Azure ML)",
-        uses_rpa_tools="RPA tools (e.g., Zaptest, Eggplant, HelpSystems)",
-    )
-    for name, desc in tools.items():
-        df[name] = df.tools.str.split(";").map(lambda lst: desc in lst)
+    # Create a `tool_usage` feature, being lists of tools.
+    df["tool_usage"] = df["tools"].str.split(";")
     df.drop(columns="tools", inplace=True)
 
     # Convert the 'timestamp' column to a datetime format, rather than simply a
