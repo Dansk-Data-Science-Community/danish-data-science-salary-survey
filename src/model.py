@@ -32,7 +32,10 @@ class QuantileModel:
                 (OneHotEncoder(), ["job_title_no_senior"]),
                 (OrdinalEncoder(categories=[list(range(16))]), ["years_experience"]),
                 ("passthrough", ["is_senior"]),
-                (OrdinalEncoder(categories=[MANUAL_SORT_COLS["num_subordinates"]]), ["num_subordinates"]),
+                (
+                    OrdinalEncoder(categories=[MANUAL_SORT_COLS["num_subordinates"]]),
+                    ["num_subordinates"],
+                ),
             ),
         )
         self.model_class = partial(QuantileRegressor, solver="highs", alpha=0.0)
@@ -54,7 +57,9 @@ class QuantileModel:
         df["job_title_no_senior"] = df["job_title"].str.replace("Senior ", "")
 
         # Select columns of interest
-        selected_cols = df[["is_senior", "job_title_no_senior", "years_experience", "num_subordinates"]]
+        selected_cols = df[
+            ["is_senior", "job_title_no_senior", "years_experience", "num_subordinates"]
+        ]
         return selected_cols
 
     def _fit(self):
@@ -70,7 +75,9 @@ class QuantileModel:
     def predict(self, x: pd.DataFrame) -> pd.Series:
         x = self.feature_extractor.transform(x)
         pred = [model.predict(x) for model in self.quantile_models]
-        pred_series = pd.Series({q: p for q, p in zip(self.QUANTILES, pred)}, name="Estimated Salary")
+        pred_series = pd.Series(
+            {q: p for q, p in zip(self.QUANTILES, pred)}, name="Estimated Salary"
+        )
         pred_series.index.name = "Quantiles"
         return pred_series
 
@@ -78,5 +85,13 @@ class QuantileModel:
         df = self.data
         x, y = df, df["salary"]
         x = self.feature_extractor.fit_transform(x)
-        mae_score = cross_val_score(self.model_class(quantile=0.5), x, y, cv=5, scoring="neg_mean_absolute_error")
-        print(f"MAE score: {mae_score.mean():.2f} (mean), +/- {mae_score.std():.2f} (std)")
+        mae_score = cross_val_score(
+            self.model_class(quantile=0.5),
+            x,
+            y,
+            cv=5,
+            scoring="neg_mean_absolute_error",
+        )
+        print(
+            f"MAE score: {mae_score.mean():.2f} (mean), +/- {mae_score.std():.2f} (std)"
+        )

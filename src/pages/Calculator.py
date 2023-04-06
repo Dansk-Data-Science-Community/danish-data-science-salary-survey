@@ -21,8 +21,12 @@ def main():
     }
 
     # Input: Job title
-    title_opt = df["job_title"].unique()  # NB: We only allow the option that we have collected data for
-    title_opt_sorted = [t for t in title_opt if "Senior" not in t] + [t for t in title_opt if "Senior" in t]
+    title_opt = df[
+        "job_title"
+    ].unique()  # NB: We only allow the option that we have collected data for
+    title_opt_sorted = [t for t in title_opt if "Senior" not in t] + [
+        t for t in title_opt if "Senior" in t
+    ]
     title = st.selectbox("Job title", title_opt_sorted)
 
     # Input: Years experience
@@ -49,9 +53,9 @@ def main():
     # TODO
     # *** FOR DEBUGGING ***
     filt_df = df[
-        (title == df["job_title"]) &
-        (convert_experience_to_int(experience) == df["years_experience"]) &
-        (subordinaries == df["num_subordinates"])
+        (title == df["job_title"])
+        & (convert_experience_to_int(experience) == df["years_experience"])
+        & (subordinaries == df["num_subordinates"])
     ]
     st.text("For debugging")
     st.dataframe(filt_df)
