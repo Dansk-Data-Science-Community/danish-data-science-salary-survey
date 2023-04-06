@@ -2,8 +2,7 @@ import time
 
 from data import load_data
 from data import convert_experience_to_int
-from model import feature_extraction
-from model import get_model
+from model import QuantileModel
 from utils import MANUAL_SORT_COLS
 
 import pandas as pd
@@ -14,6 +13,12 @@ def main():
 
     # Data loading & preprocessing
     df = load_data()
+
+    select_names = {
+        "job_title": "Job title",
+        "years_experience": "Years experience",
+        "num_subordinates": "Number of subordinates",
+    }
 
     # Input: Job title
     title_opt = df["job_title"].unique()  # NB: We only allow the option that we have collected data for
@@ -35,10 +40,11 @@ def main():
     )
 
     with st.spinner("Fetching data"):
-        model = get_model()
-        x = feature_extraction(input_data)
-        pred = model.predict(x)
-    st.text(f"*** Pred: {pred} ***")
+        model = QuantileModel()
+        pred = model.predict(input_data)
+    st.text(f"*** Pred: ***")
+    st.dataframe(pred)
+
 
     # TODO
     # *** FOR DEBUGGING ***
