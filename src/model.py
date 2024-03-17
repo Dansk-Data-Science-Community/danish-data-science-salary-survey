@@ -9,7 +9,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
-from sklearn.preprocessing import FunctionTransformer, PolynomialFeatures
+from sklearn.preprocessing import FunctionTransformer
 from sklearn.linear_model import QuantileRegressor
 from sklearn.model_selection import cross_val_score
 
@@ -30,16 +30,12 @@ class QuantileModel:
                 # TODO: This will error on unseen categories, which is nice,
                 #       but remember to gray out options that are not in the data
                 (OneHotEncoder(), ["job_title_no_senior"]),
+                (OrdinalEncoder(categories=[list(range(16))]), ["years_experience"]),
                 ("passthrough", ["is_senior"]),
                 (
                     OrdinalEncoder(categories=[MANUAL_SORT_COLS["num_subordinates"]]),
                     ["num_subordinates"],
                 ),
-                (OrdinalEncoder(categories=[list(range(16))]), ["years_experience"]),
-            ),
-            make_column_transformer(
-                (PolynomialFeatures(), -1),
-                remainder="passthrough",
             ),
         )
         self.model_class = partial(QuantileRegressor, solver="highs", alpha=0.0)
@@ -99,5 +95,3 @@ class QuantileModel:
         print(
             f"MAE score: {mae_score.mean():.2f} (mean), +/- {mae_score.std():.2f} (std)"
         )
-
-QuantileModel().score()

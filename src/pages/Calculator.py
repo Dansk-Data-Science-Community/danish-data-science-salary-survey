@@ -43,44 +43,23 @@ def main():
         columns=["job_title", "years_experience", "num_subordinates"],
     )
 
-    # # Input: Comparison variable
-    # selected = st.selectbox("Comparison variable", select_names.values())
-    # comparison = {v: k for k, v in select_names.items()}[selected]
-
     with st.spinner("Fetching data"):
         model = QuantileModel()
         pred = model.predict(input_data)
-        st.text(f"*** Pred: ***")
-        st.dataframe(pred)
+    st.text(f"*** Pred: ***")
+    st.dataframe(pred)
 
-        import seaborn as sns
-        import matplotlib.pyplot as plt
-        fig = plt.figure(figsize=(13, 6))
-        preds = {}
-        for exp_opt in experience_opt:
-            # Input as valid DataFrame
-            input_data = pd.DataFrame(
-                [[title, convert_experience_to_int(exp_opt), subordinaries]],
-                columns=list(select_names),  # dict key order is preserved from python 3.7 and up
-            )
-            model = QuantileModel()
-            preds[exp_opt] = model.predict(input_data)
 
-        preds_df = pd.DataFrame(preds)
-        plt.plot(preds_df.T)
-        # st.dataframe(preds_df)
-        st.pyplot(fig)
-
-        # TODO
-        # *** FOR DEBUGGING ***
-        filt_df = df[
-            (title == df["job_title"])
-            & (convert_experience_to_int(experience) == df["years_experience"])
-            & (subordinaries == df["num_subordinates"])
-        ]
-        st.text("For debugging")
-        st.dataframe(filt_df)
-        # *** END ***
+    # TODO
+    # *** FOR DEBUGGING ***
+    filt_df = df[
+        (title == df["job_title"])
+        & (convert_experience_to_int(experience) == df["years_experience"])
+        & (subordinaries == df["num_subordinates"])
+    ]
+    st.text("For debugging")
+    st.dataframe(filt_df)
+    # *** END ***
 
 
 if __name__ == "__main__":
